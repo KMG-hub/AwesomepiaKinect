@@ -1,0 +1,146 @@
+﻿<Window x:Class="AwesomepiaKinect.StartWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AwesomepiaKinect"
+        mc:Ignorable="d"
+        Title="StartWindow" Height="720" Width="1280" ResizeMode="NoResize">
+    <Window.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" SnapsToDevicePixels="true" StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FF993D3D"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FF993D3D"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FF993D3D"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="JointButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <StackPanel Orientation="Vertical">
+                            <Ellipse x:Name="border" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Fill="{TemplateBinding Background}" SnapsToDevicePixels="true"/>
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </StackPanel>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Fill" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Background="#FF0A0A0A">
+        <TabControl Margin="0 0 0 0">
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Text=" CAPTURE "/>
+                </TabItem.Header>
+                <Grid Background="#FF0A0A0A">
+
+                    <!--Kinect Grid-->
+                    <Grid x:Name="grid_kinect" Background="#FF303030">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="1">
+                            <Canvas>
+                                <Grid Background="Blue">
+                                    <Image x:Name="image_kinect" Source="{Binding CurrentCameraImage}"
+                                           Width="620" Height="350" Stretch="None"/>
+                                </Grid>
+
+                                <Canvas Canvas.Right="0" Canvas.Top="2" Width="614">
+                                    <Image Source="/Resources/joint-hierarchy.png" Height="650" Stretch="Uniform"/>
+
+                                    <Button x:Name="button_HandtipRight" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="13" Canvas.Top="142"/>
+                                    <Button x:Name="button_HandRight" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="60" Canvas.Top="141"/>
+                                    <Button x:Name="button_ThumbRight" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="41" Canvas.Top="162"/>
+                                    <Button x:Name="button_WristRight" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="84" Canvas.Top="139"/>
+                                    <Button x:Name="button_ElbowRight" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="159" Canvas.Top="141"/>
+                                    <Button x:Name="button_ShoulderRight" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="230" Canvas.Top="135"/>
+                                    <Button x:Name="button_ClavicleRight" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="276" Canvas.Top="121"/>
+                                    <Button x:Name="button_EyeRight" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="291" Canvas.Top="55"/>
+                                    <Button x:Name="button_EarRight" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="274" Canvas.Top="63"/>
+                                    <Button x:Name="button_HipRight" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="272" Canvas.Top="324"/>
+                                    <Button x:Name="button_KneeRight" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="266" Canvas.Top="455"/>
+                                    <Button x:Name="button_AnkleRight" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="271" Canvas.Top="567"/>
+                                    <Button x:Name="button_FootRight" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="262" Canvas.Top="603"/>
+
+                                    <Button x:Name="button_HandtipLeft" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Right="13" Canvas.Top="142"/>
+                                    <Button x:Name="button_HandLeft" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Right="56" Canvas.Top="139"/>
+                                    <Button x:Name="button_ThumbLeft" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Right="36" Canvas.Top="162"/>
+                                    <Button x:Name="button_WristLeft" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Right="78" Canvas.Top="139"/>
+                                    <Button x:Name="button_ElbowLeft" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Right="153" Canvas.Top="141"/>
+                                    <Button x:Name="button_ShoulderLeft" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Right="225" Canvas.Top="137"/>
+                                    <Button x:Name="button_ClavicleLeft" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Right="273" Canvas.Top="123"/>
+                                    <Button x:Name="button_EyeLeft" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Right="286" Canvas.Top="55"/>
+                                    <Button x:Name="button_EarLeft" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Right="270" Canvas.Top="63"/>
+                                    <Button x:Name="button_HipLeft" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Right="272" Canvas.Top="324"/>
+                                    <Button x:Name="button_KneeLeft" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Right="264" Canvas.Top="456"/>
+                                    <Button x:Name="button_AnkleLeft" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Right="267" Canvas.Top="567"/>
+                                    <Button x:Name="button_FootLeft" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Right="264" Canvas.Top="603"/>
+
+                                    <Button x:Name="button_Nose" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="301" Canvas.Top="68"/>
+                                    <Button x:Name="button_Head" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="301" Canvas.Top="86"/>
+                                    <Button x:Name="button_Neck" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="301" Canvas.Top="116"/>
+                                    <Button x:Name="button_SpineChest" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="301" Canvas.Top="177"/>
+                                    <Button x:Name="button_SpineNavel" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="301" Canvas.Top="248"/>
+                                    <Button x:Name="button_Pelvis" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="300" Canvas.Top="324"/>
+                                </Canvas>
+
+
+
+                                <Button x:Name="button_Close" Width="80" Height="30"
+                                        Canvas.Right="10" Canvas.Bottom="10"
+                                    Background="#FF993D3D" Foreground="White"
+                                    Content="DisConnect" BorderBrush="White" Click="button_Close_Click"/>
+                            </Canvas>
+                        </Grid>
+                    </Grid>
+
+                    <!--Connect Grid/-->
+                    <Grid x:Name="grid_Connect" Background="#FF303030" Visibility="Visible">
+                        <Button x:Name="button_Open" Width="80" Height="30"
+                                Background="#FF3D9962" Foreground="White"
+                                Content="Connect" BorderBrush="White" Click="button_Open_Click"/>
+                    </Grid>
+
+
+
+
+                </Grid>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text=" VIEW "/>
+                </TabItem.Header>
+                <Grid Background="#FF0A0A0A">
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Grid x:Name="grid_loading" Background="#AB000000" Visibility="Hidden">
+            <TextBlock x:Name="textblock_loading" Text="Loading..." FontSize="30" Foreground="White"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Window>
