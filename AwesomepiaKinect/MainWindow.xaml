@@ -57,8 +57,8 @@
                                 <ComboBoxItem Content="0.50 seconds"/>
                                 <ComboBoxItem Content="1.00 seconds"/>
                             </ComboBox>
-                            <Button x:Name="button_Capture" Grid.Column="0" Width="80" Height="30" Margin="5" Click="button_Capture_Click"
-                        Background="#FF3D9962" Foreground="White">Capture</Button>
+                            <Button x:Name="button_Capture" Grid.Column="1" Width="80" Height="30" Margin="5" Click="button_Capture_Click"
+                                    Background="#FF3D9962" Foreground="White">Capture</Button>
                         </StackPanel>
 
                     </Grid>

@@ -209,7 +209,6 @@ namespace AwesomepiaKinect
             BitmapSource source = null;
             Dispatcher.Invoke(() =>
             {
-                
                 source = image_kinect.Source.Clone() as BitmapSource;
                 if (source == null)
                     return;

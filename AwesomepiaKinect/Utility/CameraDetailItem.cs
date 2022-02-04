@@ -14,7 +14,16 @@ namespace Utility
 
         public string Name { get; set; }
 
-        
+
+        private string _position;
+        public string Position
+        {
+            get => _position; set
+            {
+                _position = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Position"));
+            }
+        }
 
         private string _value;
 

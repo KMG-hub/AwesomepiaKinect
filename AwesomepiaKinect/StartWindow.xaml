@@ -53,7 +53,6 @@
                     <TextBlock Text=" CAPTURE "/>
                 </TabItem.Header>
                 <Grid Background="#FF0A0A0A">
-
                     <!--Kinect Grid-->
                     <Grid x:Name="grid_kinect" Background="#FF303030">
                         <Grid.ColumnDefinitions>
@@ -62,9 +61,69 @@
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="1">
                             <Canvas>
-                                <Grid Background="Blue">
+                                <Grid Background="Blue" Canvas.Left="12" Canvas.Top="10">
                                     <Image x:Name="image_kinect" Source="{Binding CurrentCameraImage}"
                                            Width="620" Height="350" Stretch="None"/>
+                                </Grid>
+
+                                <Grid Background="DimGray" Width="620" Height="300" Canvas.Left="12" Canvas.Bottom="1">
+                                    <Canvas>
+                                        <GroupBox Header="간격" FontSize="14" Foreground="White" Canvas.Left="5" Canvas.Top="0">
+                                            <ComboBox x:Name="combobox_Interval" SelectedIndex="0" SelectionChanged="combobox_Interval_SelectionChanged">
+                                                <ComboBoxItem Content="0.10"/>
+                                                <ComboBoxItem Content="0.25"/>
+                                                <ComboBoxItem Content="0.50"/>
+                                                <ComboBoxItem Content="1.00"/>
+                                            </ComboBox>
+                                        </GroupBox>
+
+                                        <GroupBox Header="시간" FontSize="14" Foreground="White" Canvas.Left="90" Canvas.Top="0">
+                                            <ComboBox x:Name="combobox_Time" SelectedIndex="0" SelectionChanged="combobox_Time_SelectionChanged">
+                                                <ComboBoxItem Content="1.0" />
+                                                <ComboBoxItem Content="1.5" />
+                                                <ComboBoxItem Content="2.0" />
+                                                <ComboBoxItem Content="2.5" />
+                                                <ComboBoxItem Content="3.0" />
+                                                <ComboBoxItem Content="3.5" />
+                                                <ComboBoxItem Content="4.0" />
+                                                <ComboBoxItem Content="4.5" />
+                                                <ComboBoxItem Content="5.0" />
+                                            </ComboBox>
+                                        </GroupBox>
+
+                                        <Button x:Name="button_capture" Click="button_capture_Click" 
+                                                Width="80" Height="30" Canvas.Left="160" Canvas.Top="17"
+                                                Background="#FF3D9962" Foreground="White"
+                                                >CAPTURE</Button>
+
+                                        <GroupBox Header="픽셀 사이즈" FontSize="14" Foreground="White"  Canvas.Left="280" Canvas.Top="0">
+                                            <ComboBox x:Name="combobox_Pixelsize" SelectedIndex="0" SelectionChanged="combobox_Pixelsize_SelectionChanged">
+                                                <ComboBoxItem Content="10"/>
+                                                <ComboBoxItem Content="20"/>
+                                                <ComboBoxItem Content="30"/>
+                                                <ComboBoxItem Content="40"/>
+                                                <ComboBoxItem Content="50"/>
+                                                <ComboBoxItem Content="60"/>
+                                            </ComboBox>
+                                        </GroupBox>
+
+                                        <GroupBox Header="픽셀 색상" FontSize="14" Foreground="White"  Canvas.Left="380" Canvas.Top="0">
+                                            <ComboBox x:Name="combobox_Pixelcolor" SelectedIndex="0" SelectionChanged="combobox_Pixelcolor_SelectionChanged">
+                                                <ComboBoxItem Content="Blue"/>
+                                                <ComboBoxItem Content="Yellow"/>
+                                                <ComboBoxItem Content="Red"/>
+                                                <ComboBoxItem Content="Black"/>
+                                                <ComboBoxItem Content="White"/>
+                                                <ComboBoxItem Content="Gray"/>
+                                            </ComboBox>
+                                        </GroupBox>
+
+                                        <Grid Canvas.Left="0" Canvas.Top="55" >
+                                            <DataGrid  Width="620" Height="245" ItemsSource="{Binding CameraDetails}">
+                                            </DataGrid>
+                                        </Grid>
+
+                                    </Canvas>
                                 </Grid>
 
                                 <Canvas Canvas.Right="0" Canvas.Top="2" Width="614">
@@ -106,8 +165,6 @@
                                     <Button x:Name="button_Pelvis" Style="{DynamicResource JointButtonStyle}" Click="button_Joints_Click" Width="15" Height="15" Canvas.Left="300" Canvas.Top="324"/>
                                 </Canvas>
 
-
-
                                 <Button x:Name="button_Close" Width="80" Height="30"
                                         Canvas.Right="10" Canvas.Bottom="10"
                                     Background="#FF993D3D" Foreground="White"
@@ -115,17 +172,12 @@
                             </Canvas>
                         </Grid>
                     </Grid>
-
                     <!--Connect Grid/-->
                     <Grid x:Name="grid_Connect" Background="#FF303030" Visibility="Visible">
                         <Button x:Name="button_Open" Width="80" Height="30"
                                 Background="#FF3D9962" Foreground="White"
                                 Content="Connect" BorderBrush="White" Click="button_Open_Click"/>
                     </Grid>
-
-
-
-
                 </Grid>
             </TabItem>
 
@@ -134,7 +186,182 @@
                     <TextBlock Text=" VIEW "/>
                 </TabItem.Header>
                 <Grid Background="#FF0A0A0A">
+                    <Canvas>
+                        <Grid Canvas.Left="0" Canvas.Top="0" RenderTransformOrigin="0.5 0.5">
+                            <Grid.RenderTransform>
+                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                            </Grid.RenderTransform>
+                            
+                            <Image x:Name="image_saved" Width="640" Height="360"/>
+                            <Canvas x:Name="canvas_draw" Background="Transparent" PreviewMouseLeftButtonDown="canvas_draw_PreviewMouseLeftButtonDown">
+                            </Canvas>
+                            
+                        </Grid>
 
+                        <Grid Canvas.Left="650" Canvas.Top="10" >
+                            <Border BorderThickness="2" BorderBrush="LightGray"/>
+                            <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Width="605">
+                                <StackPanel x:Name="stackpanel_folder" Width="auto" Height="80" Orientation="Horizontal"/>
+                            </ScrollViewer>
+                        </Grid>
+                        <TextBlock x:Name="textblock_selected" Foreground="White" Canvas.Left="650" Canvas.Top="115"/>
+                        <Grid Canvas.Left="650" Canvas.Top="135" >
+                            <Border BorderThickness="2" BorderBrush="LightGray"/>
+                            <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Width="605">
+                                <StackPanel x:Name="stackpanel_image" Width="auto" Height="80" Orientation="Horizontal"/>
+                            </ScrollViewer>
+                        </Grid>
+
+                        <Grid Canvas.Left="5" Canvas.Top="370">
+                            <Border BorderBrush="LightGray" BorderThickness="1"/>
+                            <ScrollViewer Height="280">
+                                <StackPanel x:Name="statckpanel_viewjoints" Width="623" />
+                            </ScrollViewer>
+                        </Grid>
+                        
+                        <Grid Canvas.Left="650" Canvas.Top="240" >
+                            <Button x:Name="button_canvasreset" Width="605" FontSize="14">초기화</Button>
+                        </Grid>
+                        
+                        <Grid Canvas.Left="650" Canvas.Top="300">
+                            <TextBlock FontSize="18" Foreground="White">거북목</TextBlock>
+                        </Grid>
+
+                        <Grid Canvas.Left="650" Canvas.Top="330">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">EAR_LEFT: </TextBlock>
+                                <TextBlock x:Name="textblock_tnfirst" FontSize="14" Foreground="White" Margin="46 0 0 0"> 좌표</TextBlock>
+                            </StackPanel>
+                            
+                        </Grid>
+
+                        <Grid Canvas.Left="650" Canvas.Top="350">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">SHOULDER_LEFT:</TextBlock>
+                                <TextBlock x:Name="textblock_tnsecond" FontSize="14" Foreground="White"> 좌표</TextBlock>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Canvas.Left="1050" Canvas.Top="340">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">거리:</TextBlock>
+                                <TextBlock x:Name="textblock_tnresult" FontSize="14" Foreground="White">값</TextBlock>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Canvas.Left="700" Canvas.Top="390">
+                            <StackPanel>
+                                <Button x:Name="button_tnview" Width="120" FontSize="14" Click="button_tnview_Click">보기</Button>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Canvas.Left="650" Canvas.Top="500">
+                            <TextBlock FontSize="18" Foreground="White">척추</TextBlock>
+                        </Grid>
+
+                        <Grid Canvas.Left="650" Canvas.Top="530">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">NECK:</TextBlock>
+                                <TextBlock x:Name="textblock_bkfirst" FontSize="14" Foreground="White" Margin="7 0 0 0"> 좌표</TextBlock>
+                            </StackPanel>
+
+                        </Grid>
+
+                        <Grid Canvas.Left="650" Canvas.Top="550">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">PELVIS:</TextBlock>
+                                <TextBlock x:Name="textblock_bksecond" FontSize="14" Foreground="White"> 좌표</TextBlock>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Canvas.Left="1050" Canvas.Top="540">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">각도:</TextBlock>
+                                <TextBlock x:Name="textblock_bkresult" FontSize="14" Foreground="White">값</TextBlock>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Canvas.Left="700" Canvas.Top="590">
+                            <StackPanel>
+                                <Button x:Name="button_bkview" Width="120" FontSize="14" Click="button_bkview_Click">보기</Button>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Canvas.Left="635" Canvas.Top="0">
+                            <Button x:Name="button_listfresh" Click="button_listfresh_Click">새로고침</Button>
+                        </Grid>
+                    </Canvas>
+                    <Canvas Visibility="Hidden">
+                        <Grid Canvas.Left="650" Canvas.Top="260" >
+                            <Border BorderBrush="LightGray" BorderThickness="1"/>
+                            <StackPanel Width="605" Orientation="Horizontal">
+                                <TextBlock FontSize="14" Foreground="White" Text="선택한 좌표: " VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock x:Name="textblock_selectpoint" FontSize="14" Width="200" Foreground="White" Text="(0,0)" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Canvas.Left="650" Canvas.Top="320">
+                            <Border BorderBrush="LightGray" BorderThickness="1"/>
+                            <StackPanel Width="605" Orientation="Horizontal">
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           TextAlignment="Center" FontSize="14" Width="80" >1번</TextBlock>
+                                <ComboBox x:Name="combobox_firstitem" FontSize="14" SelectionChanged="combobox_firstitem_SelectionChanged"/>
+                                <TextBlock  x:Name="textblock_firstitem" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           TextAlignment="Center" FontSize="14" >0</TextBlock>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Canvas.Left="650" Canvas.Top="340">
+                            <Border BorderBrush="LightGray" BorderThickness="1"/>
+                            <StackPanel Width="605" Orientation="Horizontal">
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           TextAlignment="Center" FontSize="14" Width="80" >2번</TextBlock>
+                                <ComboBox x:Name="combobox_seconditem" FontSize="14" SelectionChanged="combobox_seconditem_SelectionChanged"/>
+                                <TextBlock  x:Name="textblock_seconditem" Margin="0 0 0 0"
+                                            Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            TextAlignment="Center" FontSize="14" >0</TextBlock>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Canvas.Left="650" Canvas.Top="380">
+                            <TextBlock x:Name="textblock_angleview" Foreground="White" FontSize="20">00.00 도</TextBlock>
+                        </Grid>
+
+                        <Grid Canvas.Left="650" Canvas.Top="420">
+                            <TextBlock Foreground="White" FontSize="14">비율 계산 (1번 - 선택):(2번 - 선택) 두 x값 성분의 비율)</TextBlock>
+                        </Grid>
+
+                     
+
+
+                        <!--<Grid Canvas.Left="650" Canvas.Top="420">
+                            <Border BorderBrush="LightGray" BorderThickness="1"/>
+                            <StackPanel Width="605" Orientation="Horizontal">
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           TextAlignment="Center" FontSize="14" Width="80" >1번</TextBlock>
+                                <ComboBox x:Name="combobox_ratio_firstitem" FontSize="14" SelectionChanged="combobox_ratio_firstitem_SelectionChanged"/>
+                                <TextBlock  x:Name="textblock_ratio_firstitem" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           TextAlignment="Center" FontSize="14" >0</TextBlock>
+                            </StackPanel>
+                        </Grid>
+                        
+                        <Grid Canvas.Left="650" Canvas.Top="450">
+                            <Border BorderBrush="LightGray" BorderThickness="1"/>
+                            <StackPanel Width="605" Orientation="Horizontal">
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           TextAlignment="Center" FontSize="14" Width="80" >2번</TextBlock>
+                                <ComboBox x:Name="combobox_ratio_seconditem" FontSize="14" SelectionChanged="combobox_ratio_seconditem_SelectionChanged"/>
+                                <TextBlock  x:Name="textblock_ratio_seconditem" Margin="0 0 0 0"
+                                            Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            TextAlignment="Center" FontSize="14" >0</TextBlock>
+                            </StackPanel>
+                        </Grid>-->
+
+                        <Grid Canvas.Left="650" Canvas.Top="440">
+                            <TextBlock x:Name="textblock_ratioview" Foreground="White" FontSize="20">a : b  -> 0.0001</TextBlock>
+                        </Grid>
+
+                    </Canvas>
+                       
                 </Grid>
             </TabItem>
         </TabControl>
