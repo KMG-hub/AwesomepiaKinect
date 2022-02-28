@@ -14,23 +14,6 @@ namespace StringTest
             result = result.Split('.')[0];
 
             Console.WriteLine("value: {0}, {1}", index, result);
-
-            string str = "beautiful girl is sohee";
-        }
-
-
-        enum Sohee
-        {
-            pretty = 1000,
-            cuty = 1001,
-            beautiful = 1002,
-            all = 2002
-
-        }
-
-        static void FindSohee(Sohee sohee, string memo, string script)
-        {
-            Console.WriteLine("Code: {0}, Content: {1}, Script: {2}", (int)sohee, memo, script);
         }
     }
 }

@@ -349,8 +349,13 @@ namespace Utility
                             if (jointType == JointId.EarLeft)
                             {
                                 joint.Position.X = joint.Position.X - 20;
-                                
                             }
+
+                            if (jointType == JointId.Head)
+                            {
+                                joint.Position.X = joint.Position.X + 55;
+                            }
+
                             // Get the position in 2d coords.
                             var jointPosition = _calibration.TransformTo2D(joint.Position, CalibrationDeviceType.Depth, CalibrationDeviceType.Color);
 
