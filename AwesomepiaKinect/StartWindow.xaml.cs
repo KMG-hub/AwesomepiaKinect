@@ -1072,6 +1072,7 @@ namespace AwesomepiaKinect
         {
             InitializeComponent();
             initFileList();
+            
         }
         #region ** Kinect **
         Utility.KinectViewModel _viewModel;
@@ -1079,7 +1080,7 @@ namespace AwesomepiaKinect
         {
             _viewModel = new Utility.KinectViewModel();
             DataContext = _viewModel;
-
+            initSelectViewPoint();
             IsConnected = true;
         }
         private void button_Close_Click(object sender, RoutedEventArgs e)
@@ -1104,6 +1105,15 @@ namespace AwesomepiaKinect
                     _viewModel.ViewJoints.Remove(name);
             }
         }
+
+        private void initSelectViewPoint()
+        {
+            button_Joints_Click(button_Head, new System.Windows.RoutedEventArgs());
+            button_Joints_Click(button_Pelvis, new System.Windows.RoutedEventArgs());
+            button_Joints_Click(button_Neck, new System.Windows.RoutedEventArgs());
+            button_Joints_Click(button_EarLeft, new System.Windows.RoutedEventArgs());
+        }
+
         private List<Brush> ButtonColorList = new List<Brush>()
         {
             new SolidColorBrush(Color.FromArgb(0xFF, 0x3D, 0x99, 0x62)),    // Open
@@ -1193,6 +1203,19 @@ namespace AwesomepiaKinect
         }
         private void button_capture_Click(object sender, RoutedEventArgs e)
         {
+            if (_viewModel.recogBodyNum == 0)
+            {
+                MessageBox.Show("Body 가 감지되지 않았습니다.");
+                IsCapture = false;
+                return;
+            }
+            else if (_viewModel.recogBodyNum > 1)
+            {
+                MessageBox.Show("Body 가 2명이상 감지되었습니다.");
+                IsCapture = false;
+                return;
+            }
+
             IsCapture = !IsCapture;
 
             if (IsCapture)
@@ -1272,6 +1295,9 @@ namespace AwesomepiaKinect
         {
             BitmapSource source = null;
             ImageSource image;
+
+            
+
             Dispatcher?.Invoke(() =>
             {
                 image = image_kinect.Source.Clone();
@@ -1355,9 +1381,17 @@ namespace AwesomepiaKinect
                 stackpanel_folder.Children.Add(button);
             }
         }
+        private Button previousFileButton;
         private void FileButton_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
+
+            if (previousFileButton != null)
+            {
+                previousFileButton.Background = Brushes.Transparent;
+            }
+            previousFileButton = btn;
+            btn.Background = Brushes.SkyBlue;
 
             if (!ButtonDictionary.ContainsValue(btn))
                 return;
@@ -1405,9 +1439,20 @@ namespace AwesomepiaKinect
                 stackpanel_image.Children.Add(button);
             }
         }
+
+
+        private Button previousImageButton;
         private void ImageButton_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
+
+            if (previousImageButton != null)
+            {
+                previousImageButton.Background = Brushes.Transparent;
+            }
+            previousImageButton = btn;
+            btn.Background = Brushes.SkyBlue;
+
 
             if (!ImageButtonDictionary.ContainsValue(btn))
                 return;
@@ -1488,6 +1533,7 @@ namespace AwesomepiaKinect
             rtview_IsVisible = false;
             Cal_TNData();
             Cal_BKData();
+            Cal_YAData();
         }
         private void Cb_Joint_Checked(object sender, RoutedEventArgs e)
         {
@@ -1507,19 +1553,20 @@ namespace AwesomepiaKinect
         {
             Point point = e.GetPosition(sender as Canvas);
             LeftPoint = point;
-            Cal_RTData(new Point(point.X * 2, point.Y * 2));
+            Cal_RTData();
         }
         private void canvas_draw_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             Point point = e.GetPosition(sender as Canvas);
             RightPoint = point;
-            List_SeleJointDatas[(int)JointId.Neck] = new Point(point.X * 2, point.Y * 2);
+            //List_SeleJointDatas[(int)JointId.Neck] = new Point(point.X * 2, point.Y * 2);
             Cal_TNData();
             Cal_BKData();
-            Cal_RTData(new Point(LeftPoint.X * 2, LeftPoint.Y * 2));
+            Cal_RTData();
+           
         }
 
-        #region *** TN ***
+        #region ** TN **
         private void Cal_TNData()
         {
             // 값을 구해서, UI에 값 표시, 사진에 데이터 표시
@@ -1527,10 +1574,25 @@ namespace AwesomepiaKinect
             // EARLEFT, C7, SHOULDERLEFT, || 3개의 점 간의 각도 OR EARLEFT -- C7 직선 수평선과의 각도
             // EARLEFT는 보정이 들어가야함.
             // C7은 NECK에서 보정이 들어간 값.
-
+            Point C7_Point = new Point();
+            switch (c7def)
+            {
+                case C7DEFINITION.MANUAL:
+                    C7_Point = new(RightPoint.X * 2, RightPoint.Y * 2);
+                    if (C7_Point == new Point(0, 0))
+                    {
+                        tnview_IsVisible = false;
+                    }
+                    break;
+                case C7DEFINITION.NECK:
+                    C7_Point = List_SeleJointDatas[(int)JointId.Neck];
+                    break;
+                case C7DEFINITION.HEAD:
+                    C7_Point = List_SeleJointDatas[(int)JointId.Head];
+                    break;
+            }
             Point EarLeft_Point = List_SeleJointDatas[(int)JointId.EarLeft];
             Point ShoulderLeft_Point = List_SeleJointDatas[(int)JointId.ShoulderLeft];
-            Point C7_Point = List_SeleJointDatas[(int)JointId.Neck];
 
             var xa = EarLeft_Point.X;
             var ya = EarLeft_Point.Y;
@@ -1619,19 +1681,37 @@ namespace AwesomepiaKinect
         }
         #endregion
         #region ** RT **
-        private void Cal_RTData(Point selectpoint)
+        private void Cal_RTData()
         {
             // 값을 구해서, UI에 값 표시, 사진에 데이터 표시
 
             // C7, PELVIS, SACRUM || C7 ~ SACRUM, PELVIS ~ SACRUM 2 직선의 비율을 구해야함.
             // C7은 NECK에서 보정이 들어간 값.
             // SACRUM은 사용자가 선택한 값.
+            Point C7_Point = new Point();
+            switch (c7def)
+            {
+                case C7DEFINITION.MANUAL:
+                    C7_Point = new(RightPoint.X * 2 , RightPoint.Y * 2);
+                    if (C7_Point == new Point(0, 0))
+                    {
+                        tnview_IsVisible = false;
+                    }
+                    break;
+                case C7DEFINITION.NECK:
+                    C7_Point = List_SeleJointDatas[(int)JointId.Neck];
+                    break;
+                case C7DEFINITION.HEAD:
+                    C7_Point = List_SeleJointDatas[(int)JointId.Head];
+                    break;
+            }
 
-            Point C7_Point = List_SeleJointDatas[(int)JointId.Neck];
             Point Pelvis_Point = List_SeleJointDatas[(int)JointId.Pelvis];
-            Point Sacrum_Point = selectpoint;
+            Point Sacrum_Point = new(LeftPoint.X * 2, LeftPoint.Y * 2); ;
+            if (Sacrum_Point == new Point(0, 0))
+                rtview_IsVisible = false;
 
-
+            
             var c7_sacrum_length = Math.Abs(C7_Point.X - Sacrum_Point.X);
             var pelvis_sacrum_length = Math.Abs(Pelvis_Point.X - Sacrum_Point.X);
 
@@ -1772,7 +1852,21 @@ namespace AwesomepiaKinect
             // C7은 NECK에서 보정이 들어간 값.
             // 좌, 우가 표시되어야 함.
 
-            Point C7_Point = List_SeleJointDatas[(int)JointId.Neck];
+            Point C7_Point = new Point();
+            switch (c7def)
+            {
+                case C7DEFINITION.MANUAL:
+                    C7_Point = new (RightPoint.X * 2, RightPoint.Y * 2);
+                    if (C7_Point == new Point(0, 0))
+                        bkview_IsVisible = false;
+                    break;
+                case C7DEFINITION.NECK:
+                    C7_Point = List_SeleJointDatas[(int)JointId.Neck];
+                    break;
+                case C7DEFINITION.HEAD:
+                    C7_Point = List_SeleJointDatas[(int)JointId.Head];
+                    break;
+            }
             Point Pelvis_Point = List_SeleJointDatas[(int)JointId.Pelvis];
 
 
@@ -1862,8 +1956,161 @@ namespace AwesomepiaKinect
             bkview_IsVisible = !bkview_IsVisible;
         }
         #endregion
+        #region ** YA **
+        private void Cal_YAData()
+        {
+            // 값을 구해서, UI에 값 표시, 사진에 데이터 표시
+            // 양쪽의 쇄골에 명치가 이루는 2개의 앵글을 구한다.
+            // ClavicleRight -- SpineChest -- SpineNaval
+            // ClavicleLeft -- SpineCHest -- SpineNaval
+            // 위 2개의 성분이 이루는 각도
 
-     
+            Point ClavicleRight_Point = List_SeleJointDatas[(int)JointId.ClavicleRight];
+            Point ClavicleLeft_Point = List_SeleJointDatas[(int)JointId.ClavicleLeft];
+            Point SpineChest_Point = List_SeleJointDatas[(int)JointId.SpineChest];
+            Point SpineNavalPoint = List_SeleJointDatas[(int)JointId.SpineNavel];
+
+            // xa, ya 첫번째 포인트의 좌표 x, y성분값
+            // xb, yb 가운데 포인트의 좌표 x, y성분값
+            // xc, uc 세번째 포인트의 좌표 x, y성분값
+
+            var Axa = ClavicleRight_Point.X;
+            var Aya = ClavicleRight_Point.Y;
+            var Axb = SpineChest_Point.X;
+            var Ayb = SpineChest_Point.Y;
+            var Axc = SpineNavalPoint.X;
+            var Ayc = SpineNavalPoint.Y;
+
+            var Atheta = Math.Atan2(Ayb - Aya, Axb - Axa) - Math.Atan2(Ayb - Ayc, Axb - Axc);
+            Atheta = Atheta * 180 / Math.PI;
+
+
+            var Bxa = ClavicleLeft_Point.X;
+            var Bya = ClavicleLeft_Point.Y;
+            var Bxb = SpineChest_Point.X;
+            var Byb = SpineChest_Point.Y;
+            var Bxc = SpineNavalPoint.X;
+            var Byc = SpineNavalPoint.Y;
+
+            var Btheta = Math.Atan2(Byb - Bya, Bxb - Bxa) - Math.Atan2(Byb - Byc, Bxb - Bxc);
+            Btheta = 360 - Btheta * 180 / Math.PI ;
+
+            textblock_yafirst.Text = ClavicleRight_Point.ToString();
+            textblock_yasecond.Text = ClavicleLeft_Point.ToString();
+            textblock_yathird.Text = SpineChest_Point.ToString();
+            textblock_yafourth.Text = SpineNavalPoint.ToString();
+
+            textblock_yaresultfirst.Text = Atheta.ToString("0.00 도");
+            textblock_yaresultsecond.Text = Btheta.ToString("0.00 도");
+            textblock_yaresultthird.Text = (Atheta - Btheta).ToString("0.00 도");
+
+            SetPositionEllipse(ellipse_yafirst, canvas_draw, new (ClavicleRight_Point.X / 2, ClavicleRight_Point.Y / 2));
+            SetPositionEllipse(ellipse_yasecond, canvas_draw, new(ClavicleLeft_Point.X / 2, ClavicleLeft_Point.Y / 2));
+            SetPositionEllipse(ellipse_yathird, canvas_draw, new(SpineChest_Point.X / 2, SpineChest_Point.Y / 2));
+            SetPositionEllipse(ellipse_yafourth, canvas_draw, new(SpineNavalPoint.X / 2, SpineNavalPoint.Y / 2));
+
+            SetPositionLine(line_yafirst, canvas_draw, new(ClavicleRight_Point.X / 2, ClavicleRight_Point.Y / 2), new(SpineChest_Point.X / 2, SpineChest_Point.Y / 2));
+            SetPositionLine(line_yasecond, canvas_draw, new(ClavicleLeft_Point.X / 2, ClavicleLeft_Point.Y / 2), new(SpineChest_Point.X / 2, SpineChest_Point.Y / 2));
+            SetPositionLine(line_yathird, canvas_draw, new(SpineChest_Point.X / 2, SpineChest_Point.Y / 2), new(SpineNavalPoint.X / 2, SpineNavalPoint.Y / 2));
+        }
+
+        Ellipse ellipse_yafirst = new Ellipse()
+        {
+            Fill = Brushes.Purple,
+            Width = 10,
+            Height = 10,
+            Visibility = Visibility.Hidden
+
+        };
+        Ellipse ellipse_yasecond = new Ellipse()
+        {
+            Fill = Brushes.DarkOrange,
+            Width = 10,
+            Height = 10,
+            Visibility = Visibility.Hidden
+        };
+        Ellipse ellipse_yathird = new Ellipse()
+        {
+            Fill = Brushes.DarkCyan,
+            Width = 10,
+            Height = 10,
+            Visibility = Visibility.Hidden
+        };
+        Ellipse ellipse_yafourth = new Ellipse()
+        {
+            Fill = Brushes.DarkCyan,
+            Width = 10,
+            Height = 10,
+            Visibility = Visibility.Hidden
+        };
+
+        Line line_yafirst = new Line()
+        {
+            Stroke = Brushes.Yellow,
+            StrokeThickness = 2,
+            StrokeEndLineCap = PenLineCap.Round,
+            StrokeStartLineCap = PenLineCap.Round,
+            StrokeDashArray = new DoubleCollection() { 1, 1 },
+            Visibility = Visibility.Hidden
+        };
+        Line line_yasecond = new Line()
+        {
+            Stroke = Brushes.Yellow,
+            StrokeThickness = 2,
+            StrokeEndLineCap = PenLineCap.Round,
+            StrokeStartLineCap = PenLineCap.Round,
+            StrokeDashArray = new DoubleCollection() { 1, 1 },
+            Visibility = Visibility.Hidden
+        };
+        Line line_yathird = new Line()
+        {
+            Stroke = Brushes.Yellow,
+            StrokeThickness = 2,
+            StrokeEndLineCap = PenLineCap.Round,
+            StrokeStartLineCap = PenLineCap.Round,
+            StrokeDashArray = new DoubleCollection() { 1, 1 },
+            Visibility = Visibility.Hidden
+        };
+        private bool _yaview_IsVisible = false;
+        private bool yaview_IsVisible
+        {
+            get { return _yaview_IsVisible; }
+            set
+            {
+                _yaview_IsVisible = value;
+                if (_yaview_IsVisible == false)
+                {
+                    button_yaview.Content = "보기";
+                    ellipse_yafirst.Visibility = Visibility.Hidden;
+                    ellipse_yasecond.Visibility = Visibility.Hidden;
+                    ellipse_yathird.Visibility = Visibility.Hidden;
+                    ellipse_yafourth.Visibility = Visibility.Hidden;
+
+                    line_yafirst.Visibility = Visibility.Hidden;
+                    line_yasecond.Visibility = Visibility.Hidden;
+                    line_yathird.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    button_yaview.Content = "끄기";
+
+                    ellipse_yafirst.Visibility = Visibility.Visible;
+                    ellipse_yasecond.Visibility = Visibility.Visible;
+                    ellipse_yathird.Visibility = Visibility.Visible;
+                    ellipse_yafourth.Visibility = Visibility.Visible;
+
+                    line_yafirst.Visibility = Visibility.Visible;
+                    line_yasecond.Visibility = Visibility.Visible;
+                    line_yathird.Visibility = Visibility.Visible;
+                }
+            }
+        }
+        private void button_yaview_Click(object sender, RoutedEventArgs e)
+        {
+            yaview_IsVisible = !yaview_IsVisible;
+        }
+        #endregion
+
 
         private void SetPositionEllipse(Ellipse ellipse, Canvas canvas, Point point)
         {
@@ -1886,7 +2133,38 @@ namespace AwesomepiaKinect
             line.Y2 = point2.Y;
         }
 
-       
+
+        private enum C7DEFINITION
+        {
+            MANUAL = 0,
+            HEAD = 1,
+            NECK = 2 
+        }
+
+        private C7DEFINITION c7def = C7DEFINITION.HEAD;
+        private void radiobutton_selectpoint_Checked(object sender, RoutedEventArgs e)
+        {
+            RadioButton radioButton = sender as RadioButton;
+            if (radioButton.Name == "radiobutton_select_head")
+            {
+                c7def = C7DEFINITION.HEAD;
+            }
+            else if (radioButton.Name == "radiobutton_select_manual")
+            {
+                c7def = C7DEFINITION.MANUAL;
+            }
+            else if (radioButton.Name == "radiobutton_select_neck")
+            {
+                c7def = C7DEFINITION.NECK;
+            }
+
+            if (List_SeleJointDatas.Count == 0)
+                return;
+            Cal_TNData();
+            Cal_BKData();
+            Cal_RTData();
+
+        }
     }
 }
 

@@ -130,6 +130,10 @@ namespace Utility
             }
         }
 
+        public int recogBodyNum = 0;
+
+
+
         private int minPixel = 6;
         private int maxPixel = 7;
 
@@ -156,7 +160,10 @@ namespace Utility
         {
             if (Device.GetInstalledCount() == 0)
             {
+                MessageBox.Show("연결된 키넥트가 없습니다.");
+                MessageBox.Show("프로그램을 종료합니다.");
                 Application.Current.Shutdown();
+                return;
             }
 
             _device = Device.Open();
@@ -208,7 +215,8 @@ namespace Utility
                             case OutputType.SkeletonTracking:
                                 //PresentSkeletonTracking(capture);
                                 PresentDepthSkeletonTracking(capture);
-                                break;                        }
+                                break;                        
+                        }
 
                         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentCameraImage"));
                     }
@@ -219,7 +227,6 @@ namespace Utility
                     MessageBox.Show($"An error occurred {ex.Message}");
                 }
             }
-
         }
 
         private void PresentSkeletonTracking(Capture capture)
@@ -329,10 +336,11 @@ namespace Utility
                         // We'll use the colour image if a joint isn't found.
                         outputBuffer[i] = colourBuffer[i];
                     }
-
+                    recogBodyNum = (int)frame.NumberOfBodies;
                     // Get all of the bodies.
                     for (uint b = 0; b < frame.NumberOfBodies && b < _bodyColours.Length; b++)
                     {
+
                         var body = frame.GetBody(b);
                         //var colour = _bodyColours[b];
 
@@ -351,12 +359,17 @@ namespace Utility
                                 joint.Position.X = joint.Position.X - 20;
                             }
 
-                            if (jointType == JointId.Head)
+                            //if (jointType == JointId.Head)
+                            //{
+                            //    joint.Position.X = joint.Position.X + 55;
+                            //}
+
+                            if (jointType == JointId.Neck)
                             {
-                                joint.Position.X = joint.Position.X + 55;
+                                joint.Position.X = joint.Position.X + 80;
                             }
 
-                            // Get the position in 2d coords.
+                            //Get the position in 2d coords.
                             var jointPosition = _calibration.TransformTo2D(joint.Position, CalibrationDeviceType.Depth, CalibrationDeviceType.Color);
 
                             AddOrUpdateDeviceData(
@@ -386,7 +399,7 @@ namespace Utility
                                 {
                                     for (int y = yR - minPixel; y < yR + maxPixel; y++)
                                     {
-                                        if (x > 0 && x < (outputImage.WidthPixels) && y > 0 && (y < outputImage.HeightPixels))
+                                        if (x > 0 && x < outputImage.WidthPixels && y > 0 && (y < outputImage.HeightPixels))
                                         {
                                             outputImage.SetPixel(y, x, SkeletonColour);
                                         }

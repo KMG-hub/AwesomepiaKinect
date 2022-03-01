@@ -266,7 +266,7 @@
                                     <Grid Grid.Row="2">
                                         <Grid Canvas.Left="650" Canvas.Top="350">
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">C7(NECK):</TextBlock>
+                                                <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">C7(HEAD):</TextBlock>
                                                 <TextBlock x:Name="textblock_tnsecond" FontSize="14" Foreground="White"> 좌표</TextBlock>
                                             </StackPanel>
                                         </Grid>
@@ -318,7 +318,7 @@
                                     <Grid Grid.Row="1">
                                         <Grid Canvas.Left="650" Canvas.Top="330">
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">C7(NECK):</TextBlock>
+                                                <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">C7(HEAD):</TextBlock>
                                                 <TextBlock x:Name="textblock_bkfirst" FontSize="14" Foreground="White" Margin="0 0 0 0"> 좌표</TextBlock>
                                             </StackPanel>
                                         </Grid>
@@ -377,7 +377,7 @@
                                     </Grid>
                                     <Grid Grid.Row="1">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">C7(NECK):</TextBlock>
+                                            <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">C7(HEAD):</TextBlock>
                                             <TextBlock x:Name="textblock_rtfirst" FontSize="14" Foreground="White" Margin="0 0 0 0"> 좌표</TextBlock>
                                         </StackPanel>
                                     </Grid>
@@ -415,21 +415,139 @@
                             </Grid>
                         </Grid>
 
-                        <Grid Canvas.Left="650" Canvas.Top="490" Width="605">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
+                        <Grid Canvas.Left="650" Canvas.Top="480" Width="605" Height="95">
+                            <Border BorderThickness="2" BorderBrush="Beige">
+                                <Border.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                                </Border.Background>
+                            </Border>
+                            <Grid Margin="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
 
-                            <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                <Rectangle Fill="DarkOrange" Width="25" Height="25" Margin="5"/>
+                                <Grid Grid.Column="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0">
+                                        <TextBlock FontSize="18" Foreground="White">Y 척추</TextBlock>
+                                    </Grid>
+                                    <Grid Grid.Row="1">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">Clavicle Right:</TextBlock>
+                                            <TextBlock x:Name="textblock_yafirst" FontSize="14" Foreground="White" Margin="0 0 0 0"> 좌표</TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Grid.Row="2">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">Clavicle Left:</TextBlock>
+                                            <TextBlock x:Name="textblock_yasecond" FontSize="14" Foreground="White" Margin="10 0 0 0"> 좌표</TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Grid.Row="3">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">Spine Chest:</TextBlock>
+                                            <TextBlock x:Name="textblock_yathird" FontSize="14" Foreground="White" Margin="10 0 0 0"> 좌표</TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Grid.Row="4">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock FontSize="14" Foreground="White" Margin="10 0 10 0">Spine Naval:</TextBlock>
+                                            <TextBlock x:Name="textblock_yafourth" FontSize="14" Foreground="White" Margin="10 0 0 0"> 좌표</TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <Grid Grid.Row="0" VerticalAlignment="Center">
+                                        <StackPanel Margin="20 0">
+                                            <Button x:Name="button_yaview" FontSize="14" Click="button_yaview_Click">보기</Button>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Grid.Row="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                                                <TextBlock FontSize="21" Foreground="White" Margin="10 0 10 0">우:</TextBlock>
+                                                <TextBlock x:Name="textblock_yaresultfirst" FontSize="21" Foreground="White">값</TextBlock>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                                <TextBlock FontSize="21" Foreground="White" Margin="10 0 10 0">|| 좌:</TextBlock>
+                                                <TextBlock x:Name="textblock_yaresultsecond" FontSize="21" Foreground="White">값</TextBlock>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <Grid Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <TextBlock x:Name="textblock_yaresultthird" FontSize="16" Foreground="White">값</TextBlock>
+                                        </Grid>
+                                    </Grid>
+                                  
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <!--C7 포인트 선택--> 
+                        <Grid Canvas.Left="650" Canvas.Top="580" Width="605" Height="50">
+                            <Border BorderThickness="2" BorderBrush="Beige">
+                                <Border.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                                </Border.Background>
+                            </Border>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0">
+                                    <TextBlock FontSize="18" Foreground="White" Margin="2 0 0 0">C7 포인트 선택</TextBlock>
+                                </Grid>
+
+                                <Grid Grid.Row="1">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <RadioButton x:Name="radiobutton_select_head" GroupName="SelectC7Point" Margin="5"  Content="HEAD(보정) 포인트" Foreground="White" IsChecked="True" Checked="radiobutton_selectpoint_Checked"/>
+                                        <RadioButton x:Name="radiobutton_select_manual" GroupName="SelectC7Point" Margin="5" Content="선택 포인트" Foreground="White" Checked="radiobutton_selectpoint_Checked"/>
+                                        <RadioButton x:Name="radiobutton_select_neck" GroupName="SelectC7Point" Margin="5"  Content="NECK 포인트" Foreground="White" Checked="radiobutton_selectpoint_Checked"/>
+                                        
+                                    </StackPanel>
+                                </Grid>
+                                
+
+
+                            </Grid>
+                            
+                            
+                        </Grid>
+                        <!--색정보-->
+                        <Grid Canvas.Left="650" Canvas.Top="630" Width="605">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                <Rectangle Fill="DarkOrange" Width="15" Height="15" Margin="5"/>
                                 <TextBlock Foreground="White" Margin="10 0 0 0" VerticalAlignment="Center"> 좌 클릭 시, Sacrum 설정 </TextBlock>
                             </StackPanel>
-                            <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                <Rectangle Fill="DarkCyan" Width="25" Height="25" Margin="5"/>
-                                <TextBlock Foreground="White" Margin="10 0 0 0" VerticalAlignment="Center"> 우 클릭 시, C7 설정 (설정안하면 NECK 포인트로 진행)</TextBlock>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Rectangle Fill="DarkCyan" Width="15" Height="15" Margin="5"/>
+                                <TextBlock Foreground="White" Margin="10 0 0 0" VerticalAlignment="Center"> 우 클릭 시, C7 설정 </TextBlock>
                             </StackPanel>
                         </Grid>
                         <Button x:Name="button_refresh" Canvas.Top="0" Canvas.Left="650"  Width="60" Height="25" Click="button_refresh_Click" Content="새로고침"/>
