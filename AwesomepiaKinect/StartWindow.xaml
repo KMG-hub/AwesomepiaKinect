@@ -184,7 +184,6 @@
                     </Grid>
                 </Grid>
             </TabItem>
-
             <TabItem>
                 <TabItem.Header>
                     <TextBlock Text=" VIEW "/>
@@ -521,9 +520,10 @@
 
                                 <Grid Grid.Row="1">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <RadioButton x:Name="radiobutton_select_head" GroupName="SelectC7Point" Margin="5"  Content="HEAD(보정) 포인트" Foreground="White" IsChecked="True" Checked="radiobutton_selectpoint_Checked"/>
+                                        <!--<RadioButton x:Name="radiobutton_select_head" GroupName="SelectC7Point" Margin="5"  Content="HEAD(보정) 포인트" Foreground="White" IsChecked="True" Checked="radiobutton_selectpoint_Checked"/>-->
+                                        <RadioButton x:Name="radiobutton_select_neck" GroupName="SelectC7Point" Margin="5"  Content="NECK(보정)포인트" Foreground="White" IsChecked="True" Checked="radiobutton_selectpoint_Checked"/>
                                         <RadioButton x:Name="radiobutton_select_manual" GroupName="SelectC7Point" Margin="5" Content="선택 포인트" Foreground="White" Checked="radiobutton_selectpoint_Checked"/>
-                                        <RadioButton x:Name="radiobutton_select_neck" GroupName="SelectC7Point" Margin="5"  Content="NECK 포인트" Foreground="White" Checked="radiobutton_selectpoint_Checked"/>
+                                        
                                         
                                     </StackPanel>
                                 </Grid>
@@ -552,6 +552,38 @@
                         </Grid>
                         <Button x:Name="button_refresh" Canvas.Top="0" Canvas.Left="650"  Width="60" Height="25" Click="button_refresh_Click" Content="새로고침"/>
                     </Canvas>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text=" DATABASE "/>
+                </TabItem.Header>
+                <Grid>
+                    <Canvas>
+                        <!--검색-->
+                        <StackPanel Canvas.Left="5" Canvas.Top="5" VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBox x:Name="textbox_searching" Width="180"/>
+                            <Button x:Name="button_searching" Content=" 검색 " Click="button_searching_Click"/>
+                        </StackPanel>
+                        <!--날짜 버튼 모음-->
+                        <Grid  Canvas.Left="250" Canvas.Top="3" Width="1000">
+                            <Border BorderThickness="1" BorderBrush="Black"/>
+                            <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Auto">
+                                <StackPanel x:Name="stackpanel_date" VerticalAlignment="Center" Orientation="Horizontal">
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Grid>
+
+                        <Grid Canvas.Left="5" Canvas.Top="30" Width="216.5" MinHeight="60">
+                            <!--<Border BorderThickness="1" BorderBrush="Black"/>-->
+                            <TextBox x:Name="textbox_testinfo" Background="Transparent" IsReadOnly="True"/>
+                            <DataGrid x:Name="datagrid_testinfo">
+                                
+                            </DataGrid>
+
+                        </Grid>
+                    </Canvas>
+
                 </Grid>
             </TabItem>
         </TabControl>

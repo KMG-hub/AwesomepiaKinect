@@ -1059,7 +1059,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Azure.Kinect.BodyTracking;
-
+using MySql.Data.MySqlClient;
 
 namespace AwesomepiaKinect
 {
@@ -1323,7 +1323,6 @@ namespace AwesomepiaKinect
             {
                 foreach (DataRow row in dataTable.Rows)
                 {
-
                     string temp = "";
                     foreach (var item in row.ItemArray)
                     {
@@ -1546,7 +1545,6 @@ namespace AwesomepiaKinect
             return File.ReadAllLines(path + "data.txt");
         }
         #endregion
-
         Point LeftPoint = new Point();
         Point RightPoint = new Point();
         private void canvas_draw_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -1563,7 +1561,6 @@ namespace AwesomepiaKinect
             Cal_TNData();
             Cal_BKData();
             Cal_RTData();
-           
         }
 
         #region ** TN **
@@ -1708,14 +1705,16 @@ namespace AwesomepiaKinect
 
             Point Pelvis_Point = List_SeleJointDatas[(int)JointId.Pelvis];
             Point Sacrum_Point = new(LeftPoint.X * 2, LeftPoint.Y * 2); ;
+            var Standard_Point = Sacrum_Point.X + Pelvis_Point.X;
+
+
             if (Sacrum_Point == new Point(0, 0))
                 rtview_IsVisible = false;
 
             
-            var c7_sacrum_length = Math.Abs(C7_Point.X - Sacrum_Point.X);
-            var pelvis_sacrum_length = Math.Abs(Pelvis_Point.X - Sacrum_Point.X);
-
-            var ratio = pelvis_sacrum_length / c7_sacrum_length;
+            var c7_sacrum_length = (C7_Point.X - Sacrum_Point.X);
+            var pelvis_sacrum_length = (Pelvis_Point.X - Sacrum_Point.X);
+            var ratio = c7_sacrum_length / pelvis_sacrum_length;
 
             // UI 표시
             textblock_rtfirst.Text = C7_Point.ToString();
@@ -1755,6 +1754,7 @@ namespace AwesomepiaKinect
             Height = 10,
             Visibility = Visibility.Hidden
         };
+
 
         Line line_rt_c7 = new Line()
         {
@@ -2111,7 +2111,6 @@ namespace AwesomepiaKinect
         }
         #endregion
 
-
         private void SetPositionEllipse(Ellipse ellipse, Canvas canvas, Point point)
         {
             if (!canvas.Children.Contains(ellipse))
@@ -2120,7 +2119,6 @@ namespace AwesomepiaKinect
             Canvas.SetLeft(ellipse, point.X - ellipse.Width / 2);
             Canvas.SetTop(ellipse, point.Y - ellipse.Height / 2);
         }
-
         private void SetPositionLine(Line line, Canvas canvas, Point point1, Point point2)
         {
             if (!canvas.Children.Contains(line))
@@ -2132,16 +2130,13 @@ namespace AwesomepiaKinect
             line.X2 = point2.X;
             line.Y2 = point2.Y;
         }
-
-
         private enum C7DEFINITION
         {
             MANUAL = 0,
             HEAD = 1,
             NECK = 2 
         }
-
-        private C7DEFINITION c7def = C7DEFINITION.HEAD;
+        private C7DEFINITION c7def = C7DEFINITION.NECK;
         private void radiobutton_selectpoint_Checked(object sender, RoutedEventArgs e)
         {
             RadioButton radioButton = sender as RadioButton;
@@ -2164,6 +2159,142 @@ namespace AwesomepiaKinect
             Cal_BKData();
             Cal_RTData();
 
+        }
+
+
+
+        #region ** DataBase Data **
+
+        private string mNumber = "";
+        private string mTestId = "";
+        private void button_searching_Click(object sender, RoutedEventArgs e)
+        {
+            string text = textbox_searching.Text;
+            if (string.IsNullOrEmpty(text) || string.IsNullOrWhiteSpace(text))
+                return;
+
+            setTestDateUI(SQLHelper.SelectTestDate(text));
+            mNumber = text;
+        }
+
+
+        private List<Button> list_TestDateButton;
+        private void setTestDateUI(string[] dates)
+        {
+            stackpanel_date.Children.Clear();
+            list_TestDateButton = new List<Button>();
+            for (int index = 0; index < dates.Length; index++)
+            {
+                Button button = new Button();
+                button.Margin = new Thickness(2, 2, 2, 2);
+                button.Padding = new Thickness(10, 0, 10, 0);
+                button.FontSize = 14;
+                button.Content = $"{dates[index]}";
+                button.Click += TestDateButton_Click;
+                stackpanel_date.Children.Add(button);
+
+                list_TestDateButton.Add(button);
+            }
+        }
+
+        private void TestDateButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            list_TestDateButton.ForEach(btn => btn.Background = Brushes.LightGray);
+            button.Background = Brushes.SkyBlue;
+
+            //SQLHelper.SelectTestInfo(mNumber, button.Content.ToString());
+        }
+
+        #endregion
+
+
+    }
+
+    public static class SQLHelper
+    {
+        private const string ServerIP = "211.104.146.87";
+        private const string Port = "53383";
+        private const string DataBase = "MineHealth";
+        private const string Uid = "minehealthsql";
+        private const string Pwd = "minehealthsql";
+        private const string connStr = "Server=" + ServerIP + ";Port=" + Port + ";Database=" + DataBase + ";Uid=" + Uid + ";Pwd=" + Pwd;
+        //private const string connStr = $"Server={ServerIP};Port={Port};Database={DataBase};Uid={Uid};Pwd={Pwd};";
+
+        /// <summary>
+        /// 핸드폰 번호로 테스트 일자를 조회.
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns>테스트 일자를 string Array로 반환</returns>
+        public static string[] SelectTestDate(string phone)
+        {
+            string[] result = null;
+
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    phone = phone.Replace(".", "").Replace("-", "");
+                    string Query = $"SELECT TestDate From UserLogTbl WHERE Phone = '{phone}'";
+                    conn.Open();
+                    using (MySqlCommand cmd = new(Query, conn))
+                    {
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            List<string> listresult = new List<string>();
+                            
+                            while(reader.Read())
+                            {
+                                listresult.Add(reader[0].ToString());
+                            }
+
+                            result = listresult.ToArray();
+                        }
+                    }
+
+                    for (int i = 0; i < result.Length; i++)
+                    {
+                        Debug.WriteLine(result[i]);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+            }
+            return result;
+        }
+
+        public static DataTable SelectTestID(string phone, string date)
+        {
+            DataTable dt = null;
+
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    phone = phone.Replace(".", "").Replace("-", "");
+
+                    string Query = $"SELECT TestID From UserLogTbl WHERE Phone = '{phone}' AND TestDate = '{date}' ORDER BY Id DESC LIMIT 1";
+                    conn.Open();
+                    using (MySqlCommand cmd = new(Query, conn))
+                    {
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                Debug.WriteLine(reader[0].ToString());
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+            }
+
+            return dt;
         }
     }
 }
