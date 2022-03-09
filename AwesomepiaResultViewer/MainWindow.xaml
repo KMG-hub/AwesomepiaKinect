@@ -5,23 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AwesomepiaResultViewer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="980" Width="1820" Loaded="Window_Loaded">
+        Title="MainWindow" Height="980" Width="1740" Loaded="Window_Loaded">
     <Grid>
         <Canvas>
             <Grid Width="1280" Height="720" Background="SkyBlue" Canvas.Right="0">
                 <Image x:Name="image_saved"/>
-                <Canvas x:Name="canvas_draw">
-                    
-                </Canvas>
+                <Canvas x:Name="canvas_draw" Background="Transparent" 
+                        PreviewMouseLeftButtonDown="canvas_draw_PreviewMouseLeftButtonDown"
+                        PreviewMouseRightButtonDown="canvas_draw_PreviewMouseRightButtonDown"/>
+
+
             </Grid>
 
-            <Grid>
+            <Grid Width="400">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Column="0">
+                    <RadioButton x:Name="radiobutton_front" IsChecked="True" Margin="10 5 10 5" Content="전면" Checked="radiobutton_Checked"/>
+                    <RadioButton x:Name="radiobutton_side" Margin="10 5 10 5" Content="측면" Checked="radiobutton_Checked"/>
+                </StackPanel>
+                <TextBlock x:Name="textblock_selectbutton" Grid.Column="1" HorizontalAlignment="Right"/>
+            </Grid>
+            <Grid Canvas.Top="30">
                 <DataGrid x:Name="datagrid_phone" SelectionChanged="datagrid_phone_SelectionChanged">
                     
                 </DataGrid>
             </Grid>
 
-            <Grid Canvas.Bottom="0" MaxWidth="1820">
+            <Grid Canvas.Bottom="0" MaxWidth="1820" Visibility="Hidden">
                 <DataGrid x:Name="datagrid_position" 
                           HorizontalScrollBarVisibility="Visible"/>
             </Grid>
@@ -33,6 +46,40 @@
                     </StackPanel>
                 </ScrollViewer>
               
+            </Grid>
+
+            <Grid Canvas.Bottom="0" Canvas.Right="0" Width="1280" Height="130">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Vertical" Width="100">
+                        <Button x:Name="button_clavicleleft" Content="Clavicle_Left" Margin="5" Click="button_setposition_Click"/>
+                        <Button x:Name="button_clavicleright" Content="Clavicle_Right" Margin="5" Click="button_setposition_Click"/>
+                        <Button x:Name="button_spinechest" Content="SpineChest" Margin="5" Click="button_setposition_Click"/>
+                        <Button x:Name="button_spinenaval" Content="SpineNaval" Margin="5" Click="button_setposition_Click"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="20">
+                        <TextBlock x:Name="textblock_ya" FontSize="24" Text="a"/>
+                        <Button x:Name="button_ya" Content="전면 각도 저장" Width="100" Height="50" Click="button_ya_Click"/>
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Vertical" Width="100">
+                        <Button x:Name="button_neck" Content="neck(c7)" Margin="5" Click="button_setposition_Click"/>
+                        <Button x:Name="button_earleft" Content="Ear_Left" Margin="5" Click="button_setposition_Click"/>
+                        <Button x:Name="button_pelvis" Content="Pelvis" Margin="5" Click="button_setposition_Click"/>
+                        <Button x:Name="button_sacrum" Content="Sacrum" Margin="5" Click="button_setposition_Click"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="20">
+                        <TextBlock x:Name="textblock_tn" FontSize="24" Text="b"/>
+                        <Button x:Name="button_tn" Content="측면 목 각도 저장" Width="100" Height="50" Click="button_tn_Click"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="20">
+                        <TextBlock x:Name="textblock_rt" FontSize="24" Text="c"/>
+                        <Button x:Name="button_rt" Content="측면 비율 저장" Width="100" Height="50" Click="button_rt_Click"/>
+                    </StackPanel>
+
+                </StackPanel>
             </Grid>
         </Canvas>
     </Grid>

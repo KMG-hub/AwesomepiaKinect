@@ -28,7 +28,7 @@ namespace AwesomepiaResultViewer.Utility
             {
                 try
                 {
-                    string Query = $"SELECT Phone, TestID, TestDate From UserLogTbl WHERE TestDate > '2022-03-02 17:00:00' ORDER BY TestDate ASC";
+                    string Query = $"SELECT Phone, TestID, TestDate From UserLogTbl WHERE TestDate > '2022-03-02 17:00:00' ORDER BY Id ASC";
                     conn.Open();
                     using (MySqlCommand cmd = new(Query, conn))
                     {
@@ -49,11 +49,18 @@ namespace AwesomepiaResultViewer.Utility
         public static DataTable GetPoint(string direction, string uuid)
         {
             DataTable dt = new DataTable("datas");
+
+            string tablename = "PoseATbl";
+            if (direction == "front")
+                tablename = "PoseATbl";
+            else if (direction == "side")
+                tablename = "PoseBTbl";
+
             using (MySqlConnection conn = new MySqlConnection(connStr))
             {
                 try
                 {
-                    string Query = $"SELECT * From PoseATbl WHERE TestID = '{uuid}';";
+                    string Query = $"SELECT * From {tablename} WHERE TestID = '{uuid}';";
                     conn.Open();
                     using (MySqlCommand cmd = new(Query, conn))
                     {
@@ -71,6 +78,53 @@ namespace AwesomepiaResultViewer.Utility
 
             return dt;
         }
+    
+        public enum ScoreCategory
+        {
+            FrontAngle = 0,
+            SideAngle = 1,
+            SideNeck = 2
+        }
+        public static bool SaveDatas(string TestId, ScoreCategory sc, string score)
+        {
+            bool result = false;
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    string valueqry = "";
+                    switch (sc)
+                    {
+                        case ScoreCategory.FrontAngle:
+                            valueqry = "ScoreFA";
+                            break;
+                        case ScoreCategory.SideAngle:
+                            valueqry = "ScoreSA";
+                            break;
+                        case ScoreCategory.SideNeck:
+                            valueqry = "ScoreSN";
+                            break;
+                        default:
+                            return false;
+                            break;
+                    }
+
+                    string Query = $"UPDATE ResultScoreTbl SET {valueqry} = '{score}' WHERE TestID = '{TestId}'";
+                    conn.Open();
+                    using (MySqlCommand cmd = new(Query, conn))
+                    {
+                        if (cmd.ExecuteNonQuery() > 0)
+                            result = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Debug.WriteLine(ex.Message);
+                }
+            }
+            return result;
+        }
+    
     }
 
 }
