@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AwesomepiaKinect", "Awesome
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StringTest", "StringTest\StringTest.csproj", "{E467DADF-3853-4F91-AEA2-40063CF08B32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwesomepiaResultViewer", "AwesomepiaResultViewer\AwesomepiaResultViewer.csproj", "{FA5ED94B-184F-44F3-A0E6-F13C93A74BB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AwesomepiaResultViewer", "AwesomepiaResultViewer\AwesomepiaResultViewer.csproj", "{FA5ED94B-184F-44F3-A0E6-F13C93A74BB8}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupAwesomepiaKinect", "SetupAwesomepiaKinect\SetupAwesomepiaKinect.vdproj", "{022DF59A-0DC5-48A8-81FF-19007E82F20C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{FA5ED94B-184F-44F3-A0E6-F13C93A74BB8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FA5ED94B-184F-44F3-A0E6-F13C93A74BB8}.Release|x64.ActiveCfg = Release|Any CPU
 		{FA5ED94B-184F-44F3-A0E6-F13C93A74BB8}.Release|x64.Build.0 = Release|Any CPU
+		{022DF59A-0DC5-48A8-81FF-19007E82F20C}.Debug|Any CPU.ActiveCfg = Debug
+		{022DF59A-0DC5-48A8-81FF-19007E82F20C}.Debug|x64.ActiveCfg = Debug
+		{022DF59A-0DC5-48A8-81FF-19007E82F20C}.Release|Any CPU.ActiveCfg = Release
+		{022DF59A-0DC5-48A8-81FF-19007E82F20C}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

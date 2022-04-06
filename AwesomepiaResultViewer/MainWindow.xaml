@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AwesomepiaResultViewer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="980" Width="1740" Loaded="Window_Loaded">
+        Title="MainWindow" Height="980" Width="1760" Loaded="Window_Loaded">
     <Grid>
         <Canvas>
             <Grid Width="1280" Height="720" Background="SkyBlue" Canvas.Right="0">
@@ -29,7 +29,7 @@
                 <TextBlock x:Name="textblock_selectbutton" Grid.Column="1" HorizontalAlignment="Right"/>
             </Grid>
             <Grid Canvas.Top="30">
-                <DataGrid x:Name="datagrid_phone" SelectionChanged="datagrid_phone_SelectionChanged">
+                <DataGrid x:Name="datagrid_phone" MaxHeight="900" VerticalScrollBarVisibility="Auto" SelectionChanged="datagrid_phone_SelectionChanged">
                     
                 </DataGrid>
             </Grid>

@@ -27,6 +27,9 @@ namespace Utility
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public event EventHandler KinectNoConnected;
+        public event EventHandler KinectConnected;
+
         #endregion Events
 
         #region Member vars
@@ -161,13 +164,14 @@ namespace Utility
             if (Device.GetInstalledCount() == 0)
             {
                 MessageBox.Show("연결된 키넥트가 없습니다.");
-                MessageBox.Show("프로그램을 종료합니다.");
-                Application.Current.Shutdown();
+                KinectNoConnected?.Invoke(this, new EventArgs());
+                //MessageBox.Show("프로그램을 종료합니다.");
+                //Application.Current.Shutdown();
                 return;
             }
 
             _device = Device.Open();
-
+            KinectConnected?.Invoke(this, new EventArgs());
             var configuration = new DeviceConfiguration
             {
                 ColorFormat = ImageFormat.ColorBGRA32,

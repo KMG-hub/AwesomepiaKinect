@@ -91,7 +91,7 @@ namespace AwesomepiaResultViewer
         private void initPictureList()
         {
             var imagepath = Environment.CurrentDirectory + "\\" + "kinectcapture";
-
+            //var imagepath = "https://minehealth.awesomeserver.kr/kinectcapture";
             foreach (var item in Directory.GetFiles(imagepath))
             {
                 if (!item.Contains(".png"))
@@ -149,17 +149,22 @@ namespace AwesomepiaResultViewer
         }
         private bool SelectImage(string filename)
         {
-            bool result = false;
+            bool result = true;
 
-            foreach (var key in ImageButtonDictionary.Keys)
-            {
-                if (key.Contains(filename))
-                {
-                    result = true;
-                    image_saved.Source = new BitmapImage(new Uri(key, UriKind.RelativeOrAbsolute)); ;
-                }
-            }
+            //foreach (var key in ImageButtonDictionary.Keys)
+            //{
+            //    if (key.Contains(filename))
+            //    {
+            //        result = true;
+            //        //image_saved.Source = new BitmapImage(new Uri(key, UriKind.RelativeOrAbsolute));
+                    
+            //    }
 
+                
+            //}
+
+            image_saved.Source = new BitmapImage(new Uri($"https://minehealth.awesomeserver.kr/kinectcapture/{filename}", UriKind.RelativeOrAbsolute));
+            Debug.WriteLine(image_saved.Source.ToString());
             return result;
         }
         private void radiobutton_Checked(object sender, RoutedEventArgs e)

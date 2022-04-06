@@ -1079,13 +1079,30 @@ namespace AwesomepiaKinect
         private void button_Open_Click(object sender, RoutedEventArgs e)
         {
             _viewModel = new Utility.KinectViewModel();
+            _viewModel.KinectNoConnected += _viewModel_KinectNoConnected;
+            _viewModel.KinectConnected += _viewModel_KinectConnected;
+            _viewModel.StartCamera();
+            
             DataContext = _viewModel;
             initSelectViewPoint();
+
+        }
+
+        private void _viewModel_KinectConnected(object sender, EventArgs e)
+        {
             IsConnected = true;
         }
+
+        private void _viewModel_KinectNoConnected(object sender, EventArgs e)
+        {
+            IsConnected = false;
+        }
+    
+
         private void button_Close_Click(object sender, RoutedEventArgs e)
         {
             IsConnected = false;
+            _viewModel.StopCamera();
         }
         private void button_Joints_Click(object sender, RoutedEventArgs e)
         {
@@ -1131,12 +1148,10 @@ namespace AwesomepiaKinect
                 _IsConnected = value;
                 if (_IsConnected)
                 {
-                    _viewModel.StartCamera();
                     grid_Connect.Visibility = Visibility.Hidden;
                 }
                 else
                 {
-                    _viewModel.StopCamera();
                     grid_Connect.Visibility = Visibility.Visible;
                 }
             }
@@ -2160,9 +2175,6 @@ namespace AwesomepiaKinect
             Cal_RTData();
 
         }
-
-
-
         #region ** DataBase Data **
 
         private string mNumber = "";
