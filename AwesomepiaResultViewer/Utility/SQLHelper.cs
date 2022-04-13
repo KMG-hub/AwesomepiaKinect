@@ -46,6 +46,33 @@ namespace AwesomepiaResultViewer.Utility
             return dt;
         }
 
+        public static DataTable GetResultScoreTbl()
+        {
+            DataTable dt = new DataTable("datas");
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    string Query = $"SELECT Id, Phone, TestID, TestDate, ScoreFA, ScoreSA, ScoreSN From ResultScoreTbl ORDER BY Id ASC";
+                    conn.Open();
+                    using (MySqlCommand cmd = new(Query, conn))
+                    {
+                        using (MySqlDataAdapter returnVal = new MySqlDataAdapter(cmd))
+                        {
+                            returnVal.Fill(dt);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Debug.WriteLine(ex.Message);
+                }
+            }
+            return dt;
+        }
+
+
+
         public static DataTable GetPoint(string direction, string uuid)
         {
             DataTable dt = new DataTable("datas");
@@ -75,10 +102,10 @@ namespace AwesomepiaResultViewer.Utility
                     //Debug.WriteLine(ex.Message);
                 }
             }
-
             return dt;
         }
     
+
         public enum ScoreCategory
         {
             FrontAngle = 0,

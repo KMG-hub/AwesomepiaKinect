@@ -13,8 +13,6 @@
                 <Canvas x:Name="canvas_draw" Background="Transparent" 
                         PreviewMouseLeftButtonDown="canvas_draw_PreviewMouseLeftButtonDown"
                         PreviewMouseRightButtonDown="canvas_draw_PreviewMouseRightButtonDown"/>
-
-
             </Grid>
 
             <Grid Width="400">

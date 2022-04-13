@@ -1364,7 +1364,7 @@ namespace AwesomepiaKinect
             foreach (var item in Directory.GetDirectories(Environment.CurrentDirectory).Reverse())
             {
 
-                if (!item.Contains("Capture"))
+                if (item.Contains("ref"))
                     continue;
 
                 CaptureDirectoryList.Add(item);
@@ -2218,9 +2218,43 @@ namespace AwesomepiaKinect
             //SQLHelper.SelectTestInfo(mNumber, button.Content.ToString());
         }
 
+
         #endregion
 
+        private double _CurrentScale = 1;
+        private double CurrentScale
+        {
+            get { return _CurrentScale; }
+            set 
+            {
+                _CurrentScale = value;
+                grid_image.RenderTransform = new ScaleTransform(_CurrentScale, _CurrentScale);
+                Debug.WriteLine(_CurrentScale);
+            }
+        }
+        private void canvas_draw_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (CurrentScale == 1)
+            {
+                Point point = e.GetPosition(sender as Canvas);
+                grid_image.RenderTransformOrigin = new Point(point.X / (sender as Canvas).ActualWidth, point.Y / (sender as Canvas).ActualHeight);
+            }
 
+            if (e.Delta > 0)
+            {
+                if (CurrentScale < 2)
+                {
+                    CurrentScale += 0.2;
+                }
+            }
+            else if (e.Delta < 0)
+            {
+                if (CurrentScale > 1)
+                {
+                    CurrentScale -= 0.2;
+                }
+            }
+        }
     }
 
     public static class SQLHelper

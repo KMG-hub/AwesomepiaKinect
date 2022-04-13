@@ -5,8 +5,73 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AwesomepiaResultViewer"
         mc:Ignorable="d"
-        Title="ResultWindow" Height="450" Width="800">
+        Title="ResultWindow" Height="auto" Width="1800" Loaded="Window_Loaded">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Background="SkyBlue" Width="1280" Height="720">
+            <Image x:Name="image_save" />
+            <Canvas x:Name="canvas_draw"/>
+            <Grid x:Name="grid_nodatas" Opacity="0.5" Width="640" Height="360">
+                <Border Background="AliceBlue"/>
+                <TextBlock FontSize="48" TextAlignment="Center" VerticalAlignment="Center"
+                           Foreground="Red" FontWeight="Bold">사진이 존재하지 않습니다.</TextBlock>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="600"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <RadioButton Grid.Column="0" Content="FRONT" IsChecked="True" Margin="5" Checked="RadioButton_Checked"/>
+                <RadioButton Grid.Column="1" Content="SIDE" Margin="5" Checked="RadioButton_Checked"/>
+            </Grid>
+            <DataGrid x:Name="datagrid_phone" Grid.Row="1" Width="500" FontSize="16" AutoGenerateColumns="False"
+                      MaxHeight="600" VerticalScrollBarVisibility="Auto" SelectionChanged="datagrid_phone_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Width="33" Binding="{Binding Id}"/>
+                    <DataGridTextColumn Header="TestDate" Width="170" Binding="{Binding TestDate}"/>
+                    <DataGridTextColumn Header="Phone" Width="150" Binding="{Binding Phone}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Grid Grid.Row="2" Width="500">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Front-Posture" TextAlignment="Center" Margin="5"/>
+                        <TextBox x:Name="textbox_fp" IsReadOnly="True" FontSize="16" Height="55" Margin="5" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Side-Posture" TextAlignment="Center" Margin="5"/>
+                        <TextBox x:Name="textbox_sp" IsReadOnly="True" FontSize="16" Height="55" Margin="5" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="2">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Side-Neck" TextAlignment="Center" Margin="5"/>
+                        <TextBox x:Name="textbox_sn" IsReadOnly="True" FontSize="16" Height="55" Margin="5" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

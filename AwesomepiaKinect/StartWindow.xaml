@@ -190,29 +190,32 @@
                 </TabItem.Header>
                 <Grid Background="#FF0A0A0A">
                     <Canvas>
-                        <Grid Canvas.Left="0" Canvas.Top="0" RenderTransformOrigin="0.5 0.5">
+                        <Grid x:Name="grid_image" Canvas.Left="0" Canvas.Top="0" RenderTransformOrigin="0.5 0.5">
                             <Grid.RenderTransform>
                                 <ScaleTransform ScaleX="1" ScaleY="1"/>
                             </Grid.RenderTransform>
 
-                            <Image x:Name="image_saved" Width="640" Height="360"/>
+                            <Image x:Name="image_saved" Width="640" Height="360" RenderTransformOrigin="0.5, 0.5" Stretch="UniformToFill">
+                                
+                            </Image>
                             <!--좌표 선택 캔버스-->
-                            <Canvas x:Name="canvas_draw" Background="Transparent"
+                            <Canvas x:Name="canvas_draw" Background="Transparent" RenderTransformOrigin="0.5, 0.5"
                                     PreviewMouseLeftButtonDown="canvas_draw_PreviewMouseLeftButtonDown"
-                                    PreviewMouseRightButtonDown="canvas_draw_PreviewMouseRightButtonDown">
+                                    PreviewMouseRightButtonDown="canvas_draw_PreviewMouseRightButtonDown"
+                                    PreviewMouseWheel="canvas_draw_PreviewMouseWheel">
                             </Canvas>
 
                         </Grid>
-                        
-                        
-                        <Grid Canvas.Left="650" Canvas.Top="10" >
+
+
+                        <Grid Canvas.Left="650" Canvas.Top="10" Background="Black">
                             <Border BorderThickness="2" BorderBrush="LightGray"/>
                             <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Width="605">
                                 <StackPanel x:Name="stackpanel_folder" Width="auto" Height="80" Orientation="Horizontal"/>
                             </ScrollViewer>
                         </Grid>
-                        
-                        <Grid Canvas.Left="650" Canvas.Top="110" >
+
+                        <Grid Canvas.Left="650" Canvas.Top="110" Background="Black">
                             <Border BorderThickness="2" BorderBrush="LightGray"/>
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -226,14 +229,14 @@
                             </Grid>
 
                         </Grid>
-                        <Grid Canvas.Left="5" Canvas.Top="370">
+                        <Grid Canvas.Left="5" Canvas.Top="370" Background="Black">
                             <Border BorderBrush="LightGray" BorderThickness="1"/>
                             <ScrollViewer Height="280">
                                 <StackPanel x:Name="statckpanel_viewjoints" Width="623" />
                             </ScrollViewer>
                         </Grid>
                         <!--거북목-->
-                        <Grid Canvas.Left="650" Canvas.Top="230" Width="605" Height="70">
+                        <Grid Canvas.Left="650" Canvas.Top="230" Width="605" Height="70" Background="Black">
                             <Border BorderThickness="2" BorderBrush="Beige">
                                 <Border.Background>
                                     <SolidColorBrush Color="White" Opacity="0.2"/>
@@ -252,7 +255,7 @@
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
                                     <Grid Grid.Row="0">
-                                        <TextBlock FontSize="18" Foreground="White">거북목</TextBlock>
+                                        <TextBlock FontSize="18" Foreground="White">거북목 (측면)</TextBlock>
                                     </Grid>
                                     <Grid Grid.Row="1">
                                         <Grid Canvas.Left="650" Canvas.Top="330">
@@ -293,7 +296,7 @@
                             </Grid>
                         </Grid>
                         <!--척추-->
-                        <Grid Canvas.Left="650" Canvas.Top="305" Width="605" Height="70">
+                        <Grid Canvas.Left="650" Canvas.Top="305" Width="605" Height="70" Background="Black" Visibility="Collapsed">
                             <Border BorderThickness="2" BorderBrush="Beige">
                                 <Border.Background>
                                     <SolidColorBrush Color="White" Opacity="0.2"/>
@@ -352,7 +355,7 @@
                             </Grid>
                         </Grid>
                         <!--비율-->
-                        <Grid Canvas.Left="650" Canvas.Top="380" Width="605" Height="95">
+                        <Grid Canvas.Left="650" Canvas.Top="305" Width="605" Height="95" Background="Black">
                             <Border BorderThickness="2" BorderBrush="Beige">
                                 <Border.Background>
                                     <SolidColorBrush Color="White" Opacity="0.2"/>
@@ -372,7 +375,7 @@
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
                                     <Grid Grid.Row="0">
-                                        <TextBlock FontSize="18" Foreground="White">비율</TextBlock>
+                                        <TextBlock FontSize="18" Foreground="White">비율 (측면)</TextBlock>
                                     </Grid>
                                     <Grid Grid.Row="1">
                                         <StackPanel Orientation="Horizontal">
@@ -413,8 +416,8 @@
                                 </Grid>
                             </Grid>
                         </Grid>
-
-                        <Grid Canvas.Left="650" Canvas.Top="480" Width="605" Height="95">
+                        <!--Y척추-->
+                        <Grid Canvas.Left="650" Canvas.Top="405" Width="605" Height="95" Background="Black">
                             <Border BorderThickness="2" BorderBrush="Beige">
                                 <Border.Background>
                                     <SolidColorBrush Color="White" Opacity="0.2"/>
@@ -435,7 +438,7 @@
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
                                     <Grid Grid.Row="0">
-                                        <TextBlock FontSize="18" Foreground="White">Y 척추</TextBlock>
+                                        <TextBlock FontSize="18" Foreground="White">Y 척추 (정면)</TextBlock>
                                     </Grid>
                                     <Grid Grid.Row="1">
                                         <StackPanel Orientation="Horizontal">
@@ -501,8 +504,19 @@
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <!--C7 포인트 선택--> 
-                        <Grid Canvas.Left="650" Canvas.Top="580" Width="605" Height="50">
+
+                        <Grid Canvas.Left="650" Canvas.Top="505" Width="605" Height="70" Background="Black" Visibility="Collapsed">
+                            <Border BorderThickness="2" BorderBrush="Beige">
+                                <Border.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                                </Border.Background>
+                            </Border>
+
+                            <TextBox x:Name="textbox_result" Margin="5" IsEnabled="True" IsReadOnly="True" Text="1234"/>
+                        </Grid>
+                        
+                        <!--C7 포인트 선택-->
+                        <Grid Canvas.Left="650" Canvas.Top="580" Width="605" Height="50" Background="Black">
                             <Border BorderThickness="2" BorderBrush="Beige">
                                 <Border.Background>
                                     <SolidColorBrush Color="White" Opacity="0.2"/>
@@ -535,7 +549,7 @@
                             
                         </Grid>
                         <!--색정보-->
-                        <Grid Canvas.Left="650" Canvas.Top="630" Width="605">
+                        <Grid Canvas.Left="650" Canvas.Top="630" Width="605" Background="Black">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
